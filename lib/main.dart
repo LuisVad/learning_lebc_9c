@@ -4,6 +4,7 @@ import 'package:learning_lebc_9c/modules/home/screens/home.dart';
 import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
 import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
+import 'package:learning_lebc_9c/navigation/app_navigator.dart';
 import 'package:learning_lebc_9c/widgets/splash_screen.dart';
 
 void main() {
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const Login(),
-        '/menu': (context) => const Navigator(),
+        '/menu': (context) => const AppNavigator(),
         '/home': (context) => const Home(),
         '/top': (context) => const TopScreen(),
         '/reservations': (context) => const ReservationListScreen(),

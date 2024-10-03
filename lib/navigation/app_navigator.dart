@@ -4,14 +4,14 @@ import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
 import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
 
-class Navigator extends StatefulWidget {
-  const Navigator({super.key});
+class AppNavigator extends StatefulWidget {
+  const AppNavigator({super.key});
 
   @override
-  State<Navigator> createState() => _NavigatorState();
+  State<AppNavigator> createState() => _AppNavigatorState();
 }
 
-class _NavigatorState extends State<Navigator> {
+class _AppNavigatorState extends State<AppNavigator> {
 int _selectedIndex = 0;
 static const List<Widget> _widgetOptions = <Widget>[
     Home(), // Página Home
