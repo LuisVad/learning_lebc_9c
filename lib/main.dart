@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_lebc_9c/modules/auth/login.dart';
 import 'package:learning_lebc_9c/modules/home/screens/home.dart';
 import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
+        '/login': (context) => const Login(),
+        '/menu': (context) => const Navigator(),
         '/home': (context) => const Home(),
         '/top': (context) => const TopScreen(),
         '/reservations': (context) => const ReservationListScreen(),

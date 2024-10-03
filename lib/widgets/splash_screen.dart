@@ -11,14 +11,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Retrasa la navegación por 5 segundos
-    Future.delayed(const Duration(seconds: 5), () {
-      // Verifica si el widget sigue montado antes de navegar
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
+    Future.delayed(const Duration(seconds: 3), () {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, '/login');
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,60 +1,60 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:learning_lebc_9c/modules/home/screens/home.dart';
 import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
 import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
 
-class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+class Navigator extends StatefulWidget {
+  const Navigator({super.key});
 
   @override
-  State<Navigation> createState() => _NavigationState();
+  State<Navigator> createState() => _NavigatorState();
 }
 
-class _NavigationState extends State<Navigation> {
-  int _currentPageIndex = 0;
-
-  final List<Widget> _pages = const [
+class _NavigatorState extends State<Navigator> {
+int _selectedIndex = 0;
+static const List<Widget> _widgetOptions = <Widget>[
     Home(), // Página Home
     TopScreen(), // Página Top
     ReservationListScreen(), // Página Reservations
     ProfileScreen(), // Página Profile
   ];
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            _currentPageIndex = index;
-          });
-        },
-        selectedIndex: _currentPageIndex,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
             label: 'Inicio',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.star_border),
-            selectedIcon: Icon(Icons.star),
-            label: 'Artículos',
+            label: 'Top 5',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.book_outlined),
-            selectedIcon: Icon(Icons.book),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
             label: 'Reservaciones',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
             label: 'Perfil',
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        onTap: _onItemTapped,
       ),
-      body: _pages[_currentPageIndex], // Muestra la página correspondiente según el índice seleccionado
     );
   }
-}*/
+}
