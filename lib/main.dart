@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:learning_lebc_9c/modules/auth/login.dart';
 import 'package:learning_lebc_9c/modules/home/screens/home.dart';
 import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
@@ -7,7 +9,11 @@ import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
 import 'package:learning_lebc_9c/navigation/app_navigator.dart';
 import 'package:learning_lebc_9c/widgets/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
