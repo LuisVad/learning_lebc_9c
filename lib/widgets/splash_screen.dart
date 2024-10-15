@@ -17,8 +17,10 @@ class _SplashScreenState extends State<SplashScreen> {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           print(user.uid);
+          print('¡El usuario ha iniciado sesión!');
           Navigator.pushReplacementNamed(context, '/menu');
         } else {
+          print('¡El usuario no ha iniciado sesión!');
           Navigator.pushReplacementNamed(context, '/login');
         }
       });

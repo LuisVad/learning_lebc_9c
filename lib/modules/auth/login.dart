@@ -13,6 +13,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
+  //bool _loading = false;
 
   // Función para validar el correo electrónico
   String? _validateEmail(String? value) {
@@ -32,7 +33,7 @@ class _LoginState extends State<Login> {
     if (value == null || value.isEmpty) {
       return 'Por favor ingrese su contraseña';
     }
-    if (value.length < 6) {
+    /*if (value.length < 6) {
       return 'La contraseña debe tener al menos 6 caracteres';
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
@@ -43,7 +44,7 @@ class _LoginState extends State<Login> {
     }
     if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
       return 'La contraseña debe contener al menos un carácter especial';
-    }
+    }*/
     return null;
   }
 
@@ -59,13 +60,13 @@ class _LoginState extends State<Login> {
           child: Form(
             key: _formKey,
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Image.asset('assets/stop.png', width: 200, height: 200),
+            Image.asset('assets/init.jfif', width: 200, height: 200),
             const SizedBox(height: 16),
             TextFormField(
               decoration: const InputDecoration(
-                //icon: Icon(Icons.person),
+                icon: Icon(Icons.email),
                 hintText: 'Correo Electrónico',
-                label: Text('Correo Electrónico'),
+                //label: Text('Correo Electrónico'),
                 labelStyle: TextStyle(color: Colors.black),
               ),
               keyboardType: TextInputType.emailAddress,
@@ -75,7 +76,7 @@ class _LoginState extends State<Login> {
             TextFormField(
               decoration: InputDecoration(
                   hintText: 'Contraseña',
-                  label: const Text('Contraseña'),
+                  //label: const Text('Contraseña'),
                   labelStyle: const TextStyle(color: Colors.black),
                   icon: IconButton(
                       onPressed: () {
@@ -97,13 +98,15 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      print('Email: ${_email.text}');
-                      print('Password: ${_password.text}');
+                      //print('Email: ${_email.text}');
+                      //print('Password: ${_password.text}');
                       try {
                           final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _email.text,
                             password: _password.text
                           );
+
+                          print(credential.user ?? 'No user');
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             print('No user found for that email.');
