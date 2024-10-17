@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_lebc_9c/kernel/widgets/field_password.dart';
 
@@ -55,8 +56,34 @@ class _RegisterState extends State<Register> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                          onPressed: () => print('Hola'),
-                          child: const Text('Crear Cuenta')),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            //print('Email: ${_email.text}');
+                            //print('Password: ${_password.text}');
+                            try {
+                              final credential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: _email.text,
+                                      password: _password.text);
+
+                              print(credential.user ?? 'No user');
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'user-not-found') {
+                                print('No user found for that email.');
+                              } else if (e.code == 'wrong-password') {
+                                print('Wrong password provided for that user.');
+                              }
+                            }
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.pink,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            )),
+                        child: const Text('Crear Cuenta'),
+                      ),
                     )
                   ],
                 ))

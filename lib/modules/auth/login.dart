@@ -13,7 +13,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isObscure = true;
+  //bool _isObscure = true;
   //bool _loading = false;
 
   // Función para validar el correo electrónico
@@ -95,6 +95,10 @@ class _LoginState extends State<Login> {
                                       password: _password.text);
 
                               print(credential.user ?? 'No user');
+
+                              if (credential.user != null) {
+                                Navigator.pushReplacementNamed(context, '/menu');
+                              }
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'user-not-found') {
                                 print('No user found for that email.');
