@@ -48,6 +48,37 @@ class _LoginState extends State<Login> {
     return null;
   }
 
+  Future<void> _signIn() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _email.text,
+        password: _password.text,
+      );
+
+      print(credential.user ?? 'No user');
+
+      // Verificar si el usuario ha sido autenticado
+      if (credential.user != null) {
+        
+        // Verificar si el widget está montado antes de navegar
+        if (mounted) {
+          print('Navegando a /menu');
+          Navigator.pushReplacementNamed(context, '/menu');
+        }
+      } else {
+        print('El usuario no está autenticado.');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    } catch (e) {
+      print('Error inesperado: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,30 +115,7 @@ class _LoginState extends State<Login> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            //print('Email: ${_email.text}');
-                            //print('Password: ${_password.text}');
-                            try {
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                      email: _email.text,
-                                      password: _password.text);
-
-                              print(credential.user ?? 'No user');
-
-                              if (credential.user != null) {
-                                Navigator.pushReplacementNamed(context, '/menu');
-                              }
-                            } on FirebaseAuthException catch (e) {
-                              if (e.code == 'user-not-found') {
-                                print('No user found for that email.');
-                              } else if (e.code == 'wrong-password') {
-                                print('Wrong password provided for that user.');
-                              }
-                            }
-                          }
-                        },
+                        onPressed: _signIn,
                         style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.pink,
                             foregroundColor: Colors.white,

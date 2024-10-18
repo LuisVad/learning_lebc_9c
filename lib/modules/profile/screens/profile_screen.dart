@@ -54,6 +54,7 @@ class ProfileScreen extends StatelessWidget {
                     onTap: () async {
                       print("Cerrando Sesión");
                       await FirebaseAuth.instance.signOut();
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                   ),
                 ],
