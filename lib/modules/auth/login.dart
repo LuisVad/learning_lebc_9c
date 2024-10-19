@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_lebc_9c/kernel/widgets/custom_dialog.dart';
 import 'package:learning_lebc_9c/kernel/widgets/field_password.dart';
 
 class Login extends StatefulWidget {
@@ -28,54 +29,53 @@ class _LoginState extends State<Login> {
     return null;
   }
 
-  // Función para validar la contraseña
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Por favor ingrese su contraseña';
-    }
-    /*if (value.length < 6) {
-      return 'La contraseña debe tener al menos 6 caracteres';
-    }
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos una letra mayúscula';
-    }
-    if (!RegExp(r'\d').hasMatch(value)) {
-      return 'La contraseña debe contener al menos un número';
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-      return 'La contraseña debe contener al menos un carácter especial';
-    }*/
-    return null;
-  }
-
   Future<void> _signIn() async {
-    try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _email.text,
-        password: _password.text,
-      );
+    if (_formKey.currentState!.validate()) {
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _email.text,
+          password: _password.text,
+        );
 
-      print(credential.user ?? 'No user');
+        //print(credential.user ?? 'No user');
 
-      // Verificar si el usuario ha sido autenticado
-      if (credential.user != null) {
-        
-        // Verificar si el widget está montado antes de navegar
-        if (mounted) {
-          print('Navegando a /menu');
-          Navigator.pushReplacementNamed(context, '/menu');
+        if (credential.user != null) {
+
+          showDialog(
+            context: context,
+            barrierDismissible: false, // Evitar cerrar tocando fuera
+            builder: (BuildContext context) {
+              return CustomDialog(
+                title: 'Confirmación',
+                message: '¡Bienvenido al sistema $_email.text',
+                icon: Icons.check_circle_outline,
+                iconColor: Colors.green,
+                buttonText: 'Entrar al Sistema',
+                //buttonColor: Colors.green,
+                onConfirmed: () {
+                  Navigator.pushReplacementNamed(context, '/menu');
+                },
+              );
+            },
+          );
+          
+          if (mounted) {
+            await Future.delayed(const Duration(seconds: 6));
+            //print('Navegando a /menu');
+            Navigator.pushReplacementNamed(context, '/menu');
+          }
+        } else {
+          print('El usuario no está autenticado.');
         }
-      } else {
-        print('El usuario no está autenticado.');
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      } catch (e) {
+        print('Error inesperado: $e');
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    } catch (e) {
-      print('Error inesperado: $e');
     }
   }
 
