@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_lebc_9c/kernel/widgets/custom_dialog.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Obtener el usuario actual
+    User? user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil'),
@@ -26,9 +30,9 @@ class ProfileScreen extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'luiseduardobahenacastillo007@utez.edu.mx',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+            Text(
+              user != null ? user.email! : 'No has iniciado sesión',
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -52,9 +56,26 @@ class ProfileScreen extends StatelessWidget {
                     leading: const Icon(Icons.logout),
                     title: const Text('Cerrar Sesión'),
                     onTap: () async {
-                      print("Cerrando Sesión");
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacementNamed(context, '/login');
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false, // Evitar cerrar tocando fuera
+                        builder: (BuildContext context) {
+                          return CustomDialog(
+                            title: 'Confirmación',
+                            message: '¿Estas seguro de Cerrar Sesión?',
+                            icon: Icons.warning_amber_outlined,
+                            iconColor: Colors.yellow,
+                            buttonText: 'Cerrar Sesión',
+                            //buttonColor: Colors.green,
+                            onConfirmed: () async {
+                              //print("Cerrando Sesión");
+                              //Navigator.of(context).pop();
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.pushReplacementNamed(context, '/login');
+                            },
+                          );
+                        },
+                      );
                     },
                   ),
                 ],

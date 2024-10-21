@@ -52,7 +52,7 @@ class CustomDialog extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                onConfirmed(); // Ejecuta la acción proporcionada
+                onConfirmed();
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
