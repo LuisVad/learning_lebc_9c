@@ -1,21 +1,50 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class ReservationListScreen extends StatelessWidget {
+class ReservationListScreen extends StatefulWidget {
   const ReservationListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, String>> reservations = [
-      {'name': 'Luis Valladolid', 'date': '2023-09-01', 'time': '18:00'},
-      {'name': 'Daniela Landa', 'date': '2023-09-02', 'time': '19:00'},
-      {'name': 'Alicia Madison', 'date': '2023-09-03', 'time': '20:00'},
-      {'name': 'Cristopher Soto', 'date': '2023-09-04', 'time': '21:00'},
-      {'name': 'Charlie Carrillo', 'date': '2023-09-05', 'time': '22:00'},
-    ];
+  State<ReservationListScreen> createState() => _ReservationListScreenState();
+}
 
+class _ReservationListScreenState extends State<ReservationListScreen> {
+ List<Map<String, dynamic>> reservations = [];
+  bool isLoading = true;
+  final Dio dio = Dio();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReservations();
+  }
+
+  Future<void> fetchReservations() async {
+    try {
+      // Hacemos la solicitud GET a la API
+      Response response = await dio.get('https://jsonplaceholder.typicode.com/users');
+      
+      // Si la respuesta es exitosa (200), guardamos los datos
+      if (response.statusCode == 200) {
+        setState(() {
+          // Convertimos la respuesta en una lista de mapas
+          reservations = List<Map<String, dynamic>>.from(response.data);
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching reservations: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Reservas'),
+        title: const Text('Lista de Usuarios'),
         backgroundColor: const Color.fromARGB(255, 26, 207, 180),
       ),
       floatingActionButton: FloatingActionButton(
@@ -27,17 +56,20 @@ class ReservationListScreen extends StatelessWidget {
         child: const Icon(Icons.list),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: ListView.builder(
-        itemCount: reservations.length,
-        itemBuilder: (context, index) {
-          final reservation = reservations[index];
-          return ListTile(
-            leading: const Icon(Icons.event),
-            title: Text(reservation['name']!),
-            subtitle: Text('${reservation['date']} at ${reservation['time']}'),
-          );
-        },
-      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: reservations.length,
+              itemBuilder: (context, index) {
+                final reservation = reservations[index];
+                return ListTile(
+                  leading: const Icon(Icons.person),
+                  title: Text(reservation['name'] ?? 'No Name'),
+                  subtitle: Text('Email: ${reservation['email']}'),
+                  trailing: Text('Phone: ${reservation['phone']}'),
+                );
+              },
+            ),
     );
   }
 }
