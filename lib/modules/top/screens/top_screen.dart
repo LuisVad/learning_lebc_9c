@@ -24,7 +24,7 @@ class TopScreenState extends State<TopScreen> {
         backgroundColor: const Color.fromARGB(255, 26, 207, 180),
       ),
       // Botón flotante
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
         onPressed: () {
@@ -32,7 +32,7 @@ class TopScreenState extends State<TopScreen> {
         },
         child: const Icon(Icons.person),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
       body: ListView.builder(
         itemCount: topItems.length,
         itemBuilder: (context, index) {

@@ -1,17 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_lebc_9c/modules/home/entities/restaurant.dart';
 //import 'package:learning_lebc_9c/modules/home/screens/content_column.dart';
-
-class Restaurant {
-  final String _titulo;
-  final String _description;
-  final List<String>_images;
-  final double _rating;
-  final int _count;
-
-  Restaurant(this._titulo, this._description, this._images, this._rating, this._count);
-
-}
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,37 +13,44 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final db =  FirebaseFirestore.instance;
   final List<Restaurant> _restaurants = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _fetchRestaurants();
+  }
 
-    (() async => {
-      await db.collection("restaurantes").get().then((event) => {
-       for(var doc in event.docs){
-        //print('${doc.id} => ${doc.data()}')
-        /*final restaurants = Restaurant(
-          titulo: doc['titulo'],
-          description: doc['description'],
-          images: doc['images'],
-          rating: doc['rating'],
-          price: doc['price'],
-        )*/
+  Future<void> _fetchRestaurants() async {
+    try {
+      final querySnapshot = await db.collection("restaurantes").get();
+      for (var doc in querySnapshot.docs) {
+        //print('${doc.id} => ${doc.data()}');
+        final data = doc.data();
         final restaurant = Restaurant(
-          doc.data()['titulo'],
-          doc.data()['description'],
-          List<String>.from(doc.data()['images']),
-          doc.data()['rating'],
-          doc.data()['price'],
+          data['titulo'] ?? 'Sin título',
+          data['description'] ?? 'Sin descripción',
+          List<String>.from(data['images'] ?? []),
+          (data['rating'] as num?)?.toDouble() ?? 0.0,
+          data['count'] ?? 0,
         );
         _restaurants.add(restaurant);
-       }   
+      }
+      setState(() {
+        isLoading = false;
       });
-    })();
+    } catch (e) {
+      //print('Error al obtener restaurantes: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inicio'),
@@ -62,20 +59,87 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
-        onPressed: () => Navigator.pushNamed(context, '/reservations'),
+        onPressed: () {
+          
+        },
         child: const Icon(Icons.home),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: const Row(
-        children: [
-          //Image.network(restaurants[0].images[0], width: 150, height: 150,),
-          const SizedBox(width: 8,),
-          Column(
-            children: [
-              //Text(restaurants[0].name, style: const TextStyle(fontSize: 14.0, color: Colors.black),)
-            ],
-          )
-        ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 4, // Le da un pequeño sombreado
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Imagen del restaurante
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0), // Bordes redondeados
+                  child: Image.network(
+                    _restaurants[0].images[0],
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 16), // Separación entre imagen y texto
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Título del restaurante
+                      Text(
+                        _restaurants[0].titulo,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Descripción del restaurante
+                      Text(
+                        _restaurants[0].description,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, // Corta el texto si es muy largo
+                      ),
+                      const SizedBox(height: 12),
+                      // Sección de rating y otros detalles
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.orange[300], size: 20),
+                          const SizedBox(width: 4),
+                          Text(
+                            _restaurants[0].rating.toString(),
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          const Spacer(),
+                          // Mostrar cantidad de comentarios o visitas
+                          Text(
+                            '${_restaurants[0].count} reviews',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

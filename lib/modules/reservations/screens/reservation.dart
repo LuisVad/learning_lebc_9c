@@ -47,7 +47,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
         title: const Text('Lista de Usuarios'),
         backgroundColor: const Color.fromARGB(255, 26, 207, 180),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
         onPressed: () {
@@ -55,7 +55,7 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
         },
         child: const Icon(Icons.list),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
