@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 import 'package:learning_lebc_9c/modules/home/entities/restaurant.dart';
 import 'package:learning_lebc_9c/modules/home/screens/restaurant_details.dart';
 
@@ -56,92 +57,126 @@ class _HomeState extends State<Home> {
         title: const Text('Inicio'),
         backgroundColor: const Color.fromARGB(255, 26, 207, 180),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: _restaurants.length,
-        itemBuilder: (context, index) {
-          final restaurant = _restaurants[index];
-          return GestureDetector(
-            onTap: () {
-              print("Hola aquí");
-              /*Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return RestaurantDetail(
-                  restaurant: restaurant,
-                );
-              }
-              ));*/
-            },
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.0),
-                      child: Image.network(
-                        restaurant.images[0],
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(), // Desactiva el scroll interno
+                itemCount: _restaurants.length,
+                itemBuilder: (context, index) {
+                  final restaurant = _restaurants[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return DetailsRestaurant(
+                          restaurant: restaurant,
+                        );
+                      }));
+                    },
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.network(
+                                restaurant.images[0],
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child; // La imagen se ha cargado completamente.
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                          : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                  return Container(
+                                    width: 120,
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300], // Color de fondo en caso de error
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: const Icon(Icons.error), // Icono de error
+                                  );
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(width: 16),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    restaurant.titulo,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    restaurant.description,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      StarRating(
+                                        rating: restaurant.rating,
+                                        starCount: 5,
+                                        size: 20,
+                                        color: Colors.amber,
+                                        borderColor: Colors.grey,
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '${restaurant.count} reviews',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            restaurant.titulo,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            restaurant.description,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.orange[300], size: 20),
-                              const SizedBox(width: 4),
-                              Text(
-                                restaurant.rating.toString(),
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const Spacer(),
-                              Text(
-                                '${restaurant.count} reviews',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                }, separatorBuilder: (BuildContext context, int index) => const Divider(),
               ),
             ),
-          );
-        }, separatorBuilder: (BuildContext context, int index) => const Divider(),
+          ],
+        ),
       ),
     );
   }
+
 }
