@@ -4,6 +4,8 @@ import 'package:flutter_rating/flutter_rating.dart';
 import 'package:learning_lebc_9c/modules/home/entities/restaurant.dart';
 import 'package:learning_lebc_9c/modules/home/screens/restaurant_details.dart';
 
+//AIzaSyAkTTKDqP-UXdjpbU5M9eL6Q4zTLGu5u-U --- global
+
 class Home extends StatefulWidget {
   const Home({super.key});
 

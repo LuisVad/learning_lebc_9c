@@ -3,6 +3,7 @@ import 'package:learning_lebc_9c/modules/home/screens/home.dart';
 import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
 import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
+import 'package:learning_lebc_9c/navigation/map_sample.dart';
 
 class AppNavigator extends StatefulWidget {
   const AppNavigator({super.key});
@@ -18,6 +19,7 @@ static const List<Widget> _widgetOptions = <Widget>[
     TopScreen(), // Página Top
     ReservationListScreen(), // Página Reservations
     ProfileScreen(), // Página Profile
+    MapSample() //Página Mapas
   ];
 
   void _onItemTapped(int index) {
@@ -47,6 +49,10 @@ static const List<Widget> _widgetOptions = <Widget>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Mapa',
           ),
         ],
         currentIndex: _selectedIndex,
