@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
           List<String>.from(data['images'] ?? []),
           (data['rating'] as num?)?.toDouble() ?? 0.0,
           data['count'] ?? 0,
+          data['location'],
         );
         _restaurants.add(restaurant);
       }

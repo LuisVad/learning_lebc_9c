@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:learning_lebc_9c/modules/home/entities/restaurant.dart';
 
 class DetailsRestaurant extends StatelessWidget {
@@ -89,6 +90,28 @@ class DetailsRestaurant extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Ubicación',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 200,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(restaurant.location.latitude, restaurant.location.longitude),
+                    zoom: 14,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: MarkerId(restaurant.titulo),
+                      position: LatLng(restaurant.location.latitude, restaurant.location.longitude),
+                      infoWindow: InfoWindow(title: restaurant.titulo),
+                    ),
+                  },
                 ),
               ),
             ],
