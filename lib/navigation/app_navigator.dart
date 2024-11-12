@@ -4,6 +4,7 @@ import 'package:learning_lebc_9c/modules/profile/screens/profile_screen.dart';
 import 'package:learning_lebc_9c/modules/reservations/screens/reservation.dart';
 import 'package:learning_lebc_9c/modules/top/screens/top_screen.dart';
 import 'package:learning_lebc_9c/navigation/map_sample.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppNavigator extends StatefulWidget {
   const AppNavigator({super.key});
@@ -13,8 +14,9 @@ class AppNavigator extends StatefulWidget {
 }
 
 class _AppNavigatorState extends State<AppNavigator> {
-int _selectedIndex = 0;
-static const List<Widget> _widgetOptions = <Widget>[
+  int _selectedIndex = 0;
+  late final SharedPreferences prefs;
+  static const List<Widget> _widgetOptions = <Widget>[
     Home(), // Página Home
     TopScreen(), // Página Top
     ReservationListScreen(), // Página Reservations
@@ -26,6 +28,22 @@ static const List<Widget> _widgetOptions = <Widget>[
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    (() async {
+      prefs = await SharedPreferences.getInstance();
+      final bool? tutorial = prefs.getBool('tutorial');
+      if (tutorial != null) {
+        if (!tutorial) {
+          Navigator.pushReplacementNamed(context, '/tutorial');
+        }
+      } else {
+        Navigator.pushReplacementNamed(context, '/tutorial');
+      }
+    })();
   }
 
   @override

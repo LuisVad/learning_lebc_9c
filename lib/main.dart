@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:learning_lebc_9c/modules/auth/register.dart';
+import 'package:learning_lebc_9c/modules/tutorial/screens/tutorial.dart';
 import 'firebase_options.dart';
 import 'package:learning_lebc_9c/modules/auth/login.dart';
 import 'package:learning_lebc_9c/modules/home/screens/home.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/top': (context) => const TopScreen(),
         '/reservations': (context) => const ReservationListScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/tutorial': (context) => const Tutorial()
       },
     );
   }
