@@ -7,7 +7,8 @@ import 'package:learning_lebc_9c/navigation/map_sample.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppNavigator extends StatefulWidget {
-  const AppNavigator({super.key});
+  final bool nextButton;
+  const AppNavigator(this.nextButton);
 
   @override
   State<AppNavigator> createState() => _AppNavigatorState();
@@ -33,7 +34,8 @@ class _AppNavigatorState extends State<AppNavigator> {
   @override
   void initState() {
     super.initState();
-    (() async {
+    _checkTutorial();
+    /*(() async {
       prefs = await SharedPreferences.getInstance();
       final bool? tutorial = prefs.getBool('tutorial');
       if (tutorial != null) {
@@ -43,7 +45,17 @@ class _AppNavigatorState extends State<AppNavigator> {
       } else {
         Navigator.pushReplacementNamed(context, '/tutorial');
       }
-    })();
+    })();*/
+  }
+
+  Future<void> _checkTutorial() async {
+    if (!widget.nextButton) {
+      prefs = await SharedPreferences.getInstance();
+      final bool? tutorial = prefs.getBool('tutorial');
+      if (tutorial != null) {
+        Navigator.pushReplacementNamed(context, '/tutorial');
+      }
+    }
   }
 
   @override

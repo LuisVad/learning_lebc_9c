@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_lebc_9c/navigation/app_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Tutorial extends StatefulWidget {
@@ -15,11 +16,11 @@ class _TutorialState extends State<Tutorial> {
     Navigator.pushReplacementNamed(context, '/menu');
   }
 
-  void _nextTapped() async {
+  /*void _nextTapped() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('tutorial', false);
     Navigator.pushReplacementNamed(context, '/menu');
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,10 @@ class _TutorialState extends State<Tutorial> {
             ),
             const Spacer(),
             ElevatedButton(
-                onPressed: _nextTapped, child: const Text('Continuar')),
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AppNavigator(true)),
+                ), child: const Text('Continuar')),
             InkWell(onTap: _onItemTapped, child: const Text('No mostrar'))
           ],
         ),

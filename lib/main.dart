@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
-        '/menu': (context) => const AppNavigator(),
+        '/menu': (context) => const AppNavigator(false),
         '/home': (context) => const Home(),
         '/top': (context) => const TopScreen(),
         '/reservations': (context) => const ReservationListScreen(),
