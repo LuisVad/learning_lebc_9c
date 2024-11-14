@@ -69,6 +69,7 @@ class MapSampleState extends State<MapSample> {
         label: const Text('Ir al CDS'),
         icon: const Icon(Icons.directions_boat),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat
     );
   }
 
