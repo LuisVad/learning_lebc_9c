@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_lebc_9c/kernel/widgets/custom_dialog.dart';
 import 'package:learning_lebc_9c/kernel/widgets/field_password.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,6 +17,43 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //bool _isObscure = true;
   //bool _loading = false;
+
+  late FirebaseMessaging _messaging;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebaseMessaging();
+  }
+
+  void _initializeFirebaseMessaging() async {
+    _messaging = FirebaseMessaging.instance;
+
+    // Solicita permisos
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    print('Permisos de notificación: ${settings.authorizationStatus}');
+
+    // Obtén el token
+    String? token = await _messaging.getToken();
+    print('FCM Token: $token');
+
+    // Listener para notificaciones en foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Mensaje recibido: ${message.notification?.title}');
+      // Manejar notificación
+    });
+
+    // Listener para notificaciones cuando se toca
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Notificación abierta: ${message.notification?.title}');
+      // Manejar redirección
+    });
+  }
 
   // Función para validar el correo electrónico
   String? _validateEmail(String? value) {
@@ -32,7 +70,8 @@ class _LoginState extends State<Login> {
   Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        final credential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _email.text,
           password: _password.text,
         );
@@ -57,7 +96,7 @@ class _LoginState extends State<Login> {
               );
             },
           );
-          
+
           await Future.delayed(const Duration(seconds: 6));
           //print('Navegando a /menu');
           Navigator.pushReplacementNamed(context, '/menu');
